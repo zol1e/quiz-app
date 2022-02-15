@@ -1,0 +1,111 @@
+openapi: 3.0.3
+info:
+  title: Quiz App model specification
+  description: Quiz App model specification
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    GameSocketMessage:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - CREATE
+            - ADMIN_JOIN
+            - PLAYER_JOIN
+            - START
+            - ANSWER
+            - NEXT_QUESTION
+            - FINISH_QUESTION
+            - FINISH_GAME
+        message:
+          type: string
+    QuizGame:
+      type: object
+      required:
+        - players
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        state:
+          type: string
+          enum:
+            - CREATED
+            - WAITING
+            - QUESTION
+            - FINISHED
+        quiz:
+          $ref: '#/components/schemas/Quiz'
+        actualQuestion:
+          $ref: '#/components/schemas/Question'
+        questionStartTime:
+          type: string
+          format: date-time
+        questionFinishTime:
+          type: string
+          format: date-time
+    Player:
+      type: object
+      properties:
+        id:
+          type: string
+        gameId:
+          type: string
+        name:
+          type: string
+    PlayerAnswer:
+      type: object
+      required:
+        - answers
+      properties:
+        playerId:
+          type: string
+        gameId:
+          type: string
+        questionId:
+          type: string
+        answer:
+          $ref: '#/components/schemas/Answer'
+    Quiz:
+      type: object
+      required:
+        - questions
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        text:
+          type: string
+        questionTimeLimit:
+          type: integer
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Answer'
+    Answer:
+      type: object
+      properties:
+        id:
+          type: string
+        questionId:
+          type: string
+        text:
+          type: string
+        correct:
+          type: boolean
